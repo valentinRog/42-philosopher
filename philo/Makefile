@@ -27,6 +27,6 @@ fclean: clean
 	$(RM) $(NAME)
 
 run: $(NAME)
-	./$(NAME) 5 600 300 200
+	./$(NAME) 4 310 200 100
 
 re: fclean all

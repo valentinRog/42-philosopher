@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:47:12 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/20 20:33:17 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/20 21:26:00 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,6 @@ void		init_threads(t_list *lst);
 bool		check_death(t_philo *philo);
 void		*philoop(void *arg);
 
-bool		monitor(t_philo *philo, int action);
+void		monitor(t_philo *philo, int action);
 
 #endif

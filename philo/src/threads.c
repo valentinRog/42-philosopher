@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:50:22 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/20 20:33:53 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/20 21:34:15 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,19 +52,15 @@ void	*philoop(void *arg)
 
 	pthread_mutex_lock(&philo->param->mutex_ready);
 	pthread_mutex_unlock(&philo->param->mutex_ready);
-	pthread_mutex_lock(&philo->mutex_last_eat);
 	philo->last_eat = get_time();
-	pthread_mutex_unlock(&philo->mutex_last_eat);
-	while (true)
+	while (!check_death(philo))
 	{
 		eat(philo, next_philo);
 		if (philo->n_eaten >= philo->param->number_of_eating)
 			break ;
-		if (monitor(philo, SLEEP))
-			break ;
+		monitor(philo, SLEEP);
 		micro_sleep(philo->param->time_to_sleep);
-		if (monitor(philo, THINK))
-			break ;
+		monitor(philo, THINK);
 	}
 	return NULL;
 }

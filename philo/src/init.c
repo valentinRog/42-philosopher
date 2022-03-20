@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:48:06 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/20 20:41:43 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/20 21:26:18 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ void	init_mutex(t_list *lst)
 	for (int i = 0; i < (int)lst_size(lst); i++)
 	{
 		pthread_mutex_init(&((t_philo *)node->content)->mutex_fork, NULL);
+		pthread_mutex_init(&((t_philo *)node->content)->mutex_last_eat, NULL);
 		node = node->next;
 	}
 }
