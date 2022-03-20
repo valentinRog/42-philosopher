@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:47:12 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/19 20:17:32 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/20 11:48:57 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,12 @@ typedef struct s_param
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				number_of_eating;
-	bool			threads_ready;
-	pthread_mutex_t	mutex;
 	uint64_t		time_zero;
-	bool			dead;
+	bool			threads_ready;
+	bool			death;
+	pthread_mutex_t	mutex_ready;
+	pthread_mutex_t	mutex_death;
+	pthread_mutex_t	mutex_print;
 }					t_param;
 
 typedef struct s_philo

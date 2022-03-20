@@ -6,13 +6,11 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:45:39 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/19 21:14:28 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/20 11:59:06 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-pthread_mutex_t	mutex;
 
 uint64_t	get_time(void)
 {
@@ -24,10 +22,7 @@ uint64_t	get_time(void)
 
 void	monitor(t_philo *philo, int action)
 {
-	static int death;
-	if (death)
-		return ;
-	pthread_mutex_lock(&philo->param->mutex);
+	pthread_mutex_lock(&philo->param->mutex_print);
 	printf("%ld %d", get_time() - philo->param->time_zero, philo->index);
 	if (action == FORK)
 		printf(" has taken a fork\n");
@@ -38,11 +33,8 @@ void	monitor(t_philo *philo, int action)
 	else if (action == THINK)
 		printf(" is thinking\n");
 	else if (action == DIE)
-	{
 		printf(" died\n");
-		death = 1;
-	}
-	pthread_mutex_unlock(&philo->param->mutex);
+	pthread_mutex_unlock(&philo->param->mutex_print);
 }
 
 void	smart_sleep(uint64_t time)
@@ -64,13 +56,13 @@ void	*philoop(void *arg)
 
 	while (true)
 	{
-		pthread_mutex_lock(&mutex);
+		pthread_mutex_lock(&philo->param->mutex_ready);
 		if (philo->param->threads_ready)
 		{
-			pthread_mutex_unlock(&mutex);
+			pthread_mutex_unlock(&philo->param->mutex_ready);
 			break;
 		}
-		pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&philo->param->mutex_ready);
 		usleep(50);
 	}
 	pthread_mutex_lock(&philo->mutex_last_eat);
@@ -123,65 +115,77 @@ bool	fill_param(t_param *param, int argc, char **argv)
 		return (true);
 	if (argc == 6)
 		param->number_of_eating = atoi_error(argv[5], &error);
-	pthread_mutex_init(&param->mutex, NULL);
+	param->death = false;
 	param->threads_ready = false;
 	return (error);
 }
 
-bool	init_philo(t_param *param, t_list **alst)
+void	init_philo(t_param *param, t_list **alst)
 {
 	for (int i = 0; i < param->number_of_philo; i++)
 	{
 		t_philo	*philo = malloc(sizeof(t_philo));
 		philo->index = i + 1;
 		philo->param = param;
-		pthread_mutex_init(&philo->mutex_fork, NULL);
-		pthread_mutex_init(&philo->mutex_last_eat, NULL);
 		lst_add_back(alst, lst_new(philo));
 	}
-	t_list	*node = *alst;
-	for (int i = 0; i < (int)lst_size(*alst); i++)
-	{
-		pthread_create(&((t_philo *)node->content)->thread, NULL, philoop, node);
-		pthread_detach(((t_philo *)node->content)->thread);
-		node = node->next;
-	}
-	pthread_mutex_lock(&mutex);
-	param->threads_ready = true;
-	param->time_zero = get_time();
-	pthread_mutex_unlock(&mutex);
-	node = *alst;
-	/*for (int i = 0; i < (int)lst_size(*alst); i++)
-	{
-		pthread_join(((t_philo *)node->content)->thread, NULL);
-		node = node->next;
-	}*/
-	return (false);
+	
 }
 
-int	death_loop(t_list *lst)
+void	init_mutex(t_list *lst)
 {
-	while (true)
+	t_list	*node = lst;
+	t_param	*param = ((t_philo *)node->content)->param;
+
+	pthread_mutex_init(&param->mutex_ready, NULL);
+	pthread_mutex_init(&param->mutex_death, NULL);
+	pthread_mutex_init(&param->mutex_print, NULL);
+	for (int i = 0; i < (int)lst_size(lst); i++)
 	{
-		usleep(100);
-		pthread_mutex_lock(&((t_philo *)lst->content)->mutex_last_eat);
-		if (get_time() - ((t_philo *)lst->content)->last_eat >= ((t_philo *)lst->content)->param->time_to_die)
-			monitor((t_philo *)lst->content, DIE);
-		pthread_mutex_unlock(&((t_philo *)lst->content)->mutex_last_eat);
-		lst = lst->next;
+		pthread_mutex_init(&((t_philo *)node->content)->mutex_fork, NULL);
+		pthread_mutex_init(&((t_philo *)node->content)->mutex_last_eat, NULL);
+		node = node->next;
 	}
-	return 0;
 }
+
+// int	death_loop(t_list *lst)
+// {
+// 	while (true)
+// 	{
+// 		usleep(100);
+// 		pthread_mutex_lock(&((t_philo *)lst->content)->mutex_last_eat);
+// 		if (get_time() - ((t_philo *)lst->content)->last_eat >= ((t_philo *)lst->content)->param->time_to_die)
+// 			monitor((t_philo *)lst->content, DIE);
+// 		pthread_mutex_unlock(&((t_philo *)lst->content)->mutex_last_eat);
+// 		lst = lst->next;
+// 	}
+// 	return 0;
+// }
 
 int	main(int argc, char **argv)
 {
-	pthread_mutex_init(&mutex, NULL);
 	t_param		param;
 	t_list		*lst = NULL;
 
 	if (fill_param(&param, argc, argv))
 		return (1);
-	if (init_philo(&param, &lst))
-		return (1);
-	return (death_loop(lst));
+	init_philo(&param, &lst);
+	init_mutex(lst);
+	t_list	*node = lst;
+	for (int i = 0; i < (int)lst_size(lst); i++)
+	{
+		pthread_create(&((t_philo *)node->content)->thread, NULL, philoop, node);
+		node = node->next;
+	}
+	pthread_mutex_lock(&param.mutex_ready);
+	param.threads_ready = true;
+	param.time_zero = get_time();
+	pthread_mutex_unlock(&param.mutex_ready);
+	node = lst;
+	for (int i = 0; i < (int)lst_size(lst); i++)
+	{
+		pthread_join(((t_philo *)node->content)->thread, NULL);
+		node = node->next;
+	}
+	return (0);
 }
