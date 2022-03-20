@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:48:06 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/20 16:05:17 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/20 20:37:57 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ bool	fill_param(t_param *param, int argc, char **argv)
 	else
 		param->number_of_eating = 10000000;
 	param->death = false;
-	param->threads_ready = false;
 	return (error);
 }
 
@@ -63,32 +62,30 @@ void	init_mutex(t_list *lst)
 	for (int i = 0; i < (int)lst_size(lst); i++)
 	{
 		pthread_mutex_init(&((t_philo *)node->content)->mutex_fork, NULL);
-		pthread_mutex_init(&((t_philo *)node->content)->mutex_last_eat, NULL);
 		node = node->next;
 	}
 }
 
-static void	death_loop(t_list *lst)
+void	death_loop(t_list *lst)
 {
 	t_list	*node = lst;
 
 	while (true)
 	{
-		t_philo	*philo = (t_philo *)lst->content;
+		t_philo	*philo = (t_philo *)node->content;
 		pthread_mutex_lock(&philo->mutex_last_eat);
-		if (get_time() - philo->last_eat >= (uint16_t)philo->param->time_to_die)
+		if (get_time() - philo->last_eat >= philo->param->time_to_die)
 		{
 			pthread_mutex_unlock(&philo->mutex_last_eat);
+			monitor(philo, DIE);
 			pthread_mutex_lock(&philo->param->mutex_death);
 			philo->param->death = true;
 			pthread_mutex_unlock(&philo->param->mutex_death);
-			printf("%ld %d", get_time() - philo->param->time_zero, philo->index);
-			printf(" died\n");
 			break;
 		}
 		pthread_mutex_unlock(&philo->mutex_last_eat);
 		node = node->next;
-		usleep(10);		
+		usleep(30);
 	}
 }
 
@@ -102,7 +99,6 @@ void	init_threads(t_list *lst)
 		pthread_create(&((t_philo *)node->content)->thread, NULL, philoop, node);
 		node = node->next;
 	}
-	param->threads_ready = true;
 	param->time_zero = get_time();
 	pthread_mutex_unlock(&param->mutex_ready);
 	sleep(1);

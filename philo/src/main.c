@@ -6,17 +6,20 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:45:39 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/20 14:43:10 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/20 20:37:32 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	monitor(t_philo *philo, int action)
+bool	monitor(t_philo *philo, int action)
 {
-	if (check_death(philo))
-		return ;
 	pthread_mutex_lock(&philo->param->mutex_print);
+	if (check_death(philo))
+	{
+		pthread_mutex_unlock(&philo->param->mutex_print);
+		return true;
+	}
 	printf("%ld %d", get_time() - philo->param->time_zero, philo->index);
 	if (action == FORK)
 		printf(" has taken a fork\n");
@@ -29,6 +32,7 @@ void	monitor(t_philo *philo, int action)
 	else if (action == DIE)
 		printf(" died\n");
 	pthread_mutex_unlock(&philo->param->mutex_print);
+	return false;
 }
 
 int	main(int argc, char **argv)
