@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:47:12 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/20 11:48:57 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/20 13:50:59 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,12 @@ typedef struct s_param
 typedef struct s_philo
 {
 	int				index;
-	pthread_mutex_t	mutex_fork;
-	pthread_t		thread;
 	t_param			*param;
+	pthread_t		thread;
 	uint64_t		last_eat;
+	int				n_eaten;
 	pthread_mutex_t	mutex_last_eat;
+	pthread_mutex_t	mutex_fork;
 }	t_philo;
 
 /*circular_lst*/
@@ -70,5 +71,20 @@ void	lst_add_back(t_list **alst, t_list *new_node);
 
 /*utils*/
 int	atoi_error(char *str, bool *error);
+
+/*time*/
+uint64_t	get_time(void);
+void		micro_sleep(uint64_t time);
+
+/*init*/
+bool	fill_param(t_param *param, int argc, char **argv);
+void	init_philo(t_param *param, t_list **alst);
+void	init_mutex(t_list *lst);
+void	init_threads(t_list *lst);
+
+/*threads*/
+void	*philoop(void *arg);
+
+void	monitor(t_philo *philo, int action);
 
 #endif
