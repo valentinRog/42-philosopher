@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:48:06 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/20 13:48:29 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/20 14:54:47 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,30 @@ void	init_mutex(t_list *lst)
 	}
 }
 
+static void	death_loop(t_list *lst)
+{
+	t_list	*node = lst;
+
+	while (true)
+	{
+		t_philo	*philo = (t_philo *)lst->content;
+		pthread_mutex_lock(&philo->mutex_last_eat);
+		if (get_time() - philo->last_eat >= (uint16_t)philo->param->time_to_die)
+		{
+			pthread_mutex_unlock(&philo->mutex_last_eat);
+			pthread_mutex_lock(&philo->param->mutex_death);
+			philo->param->death = true;
+			pthread_mutex_unlock(&philo->param->mutex_death);
+			printf("%ld %d", get_time() - philo->param->time_zero, philo->index);
+			printf(" died\n");
+			break;
+		}
+		pthread_mutex_unlock(&philo->mutex_last_eat);
+		node = node->next;
+		usleep(2000);		
+	}
+}
+
 void	init_threads(t_list *lst)
 {
 	t_list	*node = lst;
@@ -81,6 +105,8 @@ void	init_threads(t_list *lst)
 	param->threads_ready = true;
 	param->time_zero = get_time();
 	pthread_mutex_unlock(&param->mutex_ready);
+	sleep(1);
+	death_loop(lst);
 	node = lst;
 	for (int i = 0; i < (int)lst_size(lst); i++)
 	{

@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:37:14 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/20 13:44:36 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/20 13:54:24 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,13 @@ uint64_t	get_time(void)
 
 void	micro_sleep(uint64_t time)
 {
-	uint64_t i = get_time();
+	uint64_t	i;
+
+	i = get_time();
 	while (true)
 	{
 		if (get_time() - i >= time)
-			break;
+			break ;
 		usleep(50);
 	}
 }

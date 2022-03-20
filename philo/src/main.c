@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:45:39 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/20 13:50:39 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/20 14:43:10 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	monitor(t_philo *philo, int action)
 {
+	if (check_death(philo))
+		return ;
 	pthread_mutex_lock(&philo->param->mutex_print);
 	printf("%ld %d", get_time() - philo->param->time_zero, philo->index);
 	if (action == FORK)
@@ -32,8 +34,9 @@ void	monitor(t_philo *philo, int action)
 int	main(int argc, char **argv)
 {
 	t_param		param;
-	t_list		*lst = NULL;
+	t_list		*lst;
 
+	lst = NULL;
 	if (fill_param(&param, argc, argv))
 		return (1);
 	init_philo(&param, &lst);

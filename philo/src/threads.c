@@ -6,18 +6,14 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:50:22 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/20 13:50:37 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/20 14:46:15 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*philoop(void *arg)
+static void	wait_other_threads(t_philo *philo)
 {
-	t_list	*node = (t_list *)arg;
-	t_philo	*philo = (t_philo*)node->content;
-	t_philo	*next_philo = (t_philo*)node->next->content;
-
 	while (true)
 	{
 		pthread_mutex_lock(&philo->param->mutex_ready);
@@ -28,13 +24,12 @@ void	*philoop(void *arg)
 		}
 		pthread_mutex_unlock(&philo->param->mutex_ready);
 		usleep(50);
-	}
-	pthread_mutex_lock(&philo->mutex_last_eat);
-	philo->last_eat = get_time();
-	pthread_mutex_unlock(&philo->mutex_last_eat);
-	while (true)
-	{
-		if (philo->index < next_philo->index)
+	}	
+}
+
+static void	eat(t_philo *philo, t_philo *next_philo)
+{
+	if (philo->index < next_philo->index)
 		{
 			pthread_mutex_lock(&philo->mutex_fork);
 			pthread_mutex_lock(&next_philo->mutex_fork);
@@ -52,10 +47,39 @@ void	*philoop(void *arg)
 		philo->last_eat = get_time();
 		pthread_mutex_unlock(&philo->mutex_last_eat);
 		philo->n_eaten++;
+}
+
+bool	check_death(t_philo *philo)
+{
+	bool	death;
+
+	pthread_mutex_lock(&philo->param->mutex_death);
+	death = philo->param->death;
+	pthread_mutex_unlock(&philo->param->mutex_death);
+	return (death);
+}
+
+void	*philoop(void *arg)
+{
+	t_list	*node = (t_list *)arg;
+	t_philo	*philo = (t_philo*)node->content;
+	t_philo	*next_philo = (t_philo*)node->next->content;
+
+	wait_other_threads(philo);
+	pthread_mutex_lock(&philo->mutex_last_eat);
+	philo->last_eat = get_time();
+	pthread_mutex_unlock(&philo->mutex_last_eat);
+	while (true)
+	{
+		if (check_death(philo))
+			break ;
+		eat(philo, next_philo);
 		if (philo->n_eaten >= philo->param->number_of_eating)
-			return (NULL);
+			break ;
 		monitor(philo, SLEEP);
 		micro_sleep(philo->param->time_to_sleep);
+		if (check_death(philo))
+			break ;
 		monitor(philo, THINK);
 	}
 	return NULL;

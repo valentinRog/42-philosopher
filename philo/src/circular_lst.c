@@ -33,11 +33,13 @@ size_t	lst_size(t_list *lst)
 	i = 0;
 	node = lst;
 	if (lst)
+	{
 		while (node != lst || !i)
 		{
 			node = node->next;
-			i++;	
+			i++;
 		}
+	}
 	return (i);
 }
 
