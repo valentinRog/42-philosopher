@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:50:22 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/20 14:46:15 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/20 15:44:44 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ static void	eat(t_philo *philo, t_philo *next_philo)
 		micro_sleep(philo->param->time_to_eat);
 		pthread_mutex_unlock(&philo->mutex_fork);
 		pthread_mutex_unlock(&next_philo->mutex_fork);
+		philo->n_eaten++;
 		pthread_mutex_lock(&philo->mutex_last_eat);
 		philo->last_eat = get_time();
 		pthread_mutex_unlock(&philo->mutex_last_eat);
-		philo->n_eaten++;
 }
 
 bool	check_death(t_philo *philo)

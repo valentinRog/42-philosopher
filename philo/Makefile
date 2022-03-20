@@ -6,7 +6,7 @@ INCLUDES = includes
 
 OBJ = $(SRC:.c=.o)
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = #-Wall -Wextra -Werror
 
 CC = gcc
 
@@ -27,6 +27,6 @@ fclean: clean
 	$(RM) $(NAME)
 
 run: $(NAME)
-	./$(NAME) 100 2000 200 2500 100
+	./$(NAME) 5 800 200 200
 
 re: fclean all

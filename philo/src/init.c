@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:48:06 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/20 14:54:47 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/20 16:05:17 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ bool	fill_param(t_param *param, int argc, char **argv)
 	if (argc == 6)
 		param->number_of_eating = atoi_error(argv[5], &error);
 	else
-		param->number_of_eating = 1;
+		param->number_of_eating = 10000000;
 	param->death = false;
 	param->threads_ready = false;
 	return (error);
@@ -88,7 +88,7 @@ static void	death_loop(t_list *lst)
 		}
 		pthread_mutex_unlock(&philo->mutex_last_eat);
 		node = node->next;
-		usleep(2000);		
+		usleep(10);		
 	}
 }
 
