@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:48:06 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/20 20:37:57 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/20 20:41:43 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	death_loop(t_list *lst)
 	{
 		t_philo	*philo = (t_philo *)node->content;
 		pthread_mutex_lock(&philo->mutex_last_eat);
-		if (get_time() - philo->last_eat >= philo->param->time_to_die)
+		if (get_time() - philo->last_eat >= (uint64_t)philo->param->time_to_die)
 		{
 			pthread_mutex_unlock(&philo->mutex_last_eat);
 			monitor(philo, DIE);

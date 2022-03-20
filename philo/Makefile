@@ -6,17 +6,17 @@ INCLUDES = includes
 
 OBJ = $(SRC:.c=.o)
 
-CFLAGS = #-Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror  #-fsanitize=thread
 
 CC = gcc
 
 $(RM) = rm -rf
 
 .c.o: $(SRC) $(SRCB)
-	$(CC) $(CFLAGS) -fsanitize=thread -lpthread -I $(INCLUDES) -c -o $@ $<
+	$(CC) $(CFLAGS) -I $(INCLUDES) -c -o $@ $<
 
 $(NAME): $(OBJ)
-	$(CC) $(OBJ) -fsanitize=thread -lpthread -o $@
+	$(CC) $(CFLAGS) $(OBJ) -lpthread -o $@
 
 all: $(NAME)
 
@@ -27,6 +27,6 @@ fclean: clean
 	$(RM) $(NAME)
 
 run: $(NAME)
-	./$(NAME) 50 600 300 200
+	./$(NAME) 5 600 300 200
 
 re: fclean all
