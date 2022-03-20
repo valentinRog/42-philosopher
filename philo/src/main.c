@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:45:39 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/20 11:59:06 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/20 12:02:35 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,19 +148,26 @@ void	init_mutex(t_list *lst)
 	}
 }
 
-// int	death_loop(t_list *lst)
-// {
-// 	while (true)
-// 	{
-// 		usleep(100);
-// 		pthread_mutex_lock(&((t_philo *)lst->content)->mutex_last_eat);
-// 		if (get_time() - ((t_philo *)lst->content)->last_eat >= ((t_philo *)lst->content)->param->time_to_die)
-// 			monitor((t_philo *)lst->content, DIE);
-// 		pthread_mutex_unlock(&((t_philo *)lst->content)->mutex_last_eat);
-// 		lst = lst->next;
-// 	}
-// 	return 0;
-// }
+void	init_threads(t_list *lst)
+{
+	t_list	*node = lst;
+	t_param	*param = ((t_philo *)node->content)->param;
+	for (int i = 0; i < (int)lst_size(lst); i++)
+	{
+		pthread_create(&((t_philo *)node->content)->thread, NULL, philoop, node);
+		node = node->next;
+	}
+	pthread_mutex_lock(&param->mutex_ready);
+	param->threads_ready = true;
+	param->time_zero = get_time();
+	pthread_mutex_unlock(&param->mutex_ready);
+	node = lst;
+	for (int i = 0; i < (int)lst_size(lst); i++)
+	{
+		pthread_join(((t_philo *)node->content)->thread, NULL);
+		node = node->next;
+	}
+}
 
 int	main(int argc, char **argv)
 {
@@ -171,21 +178,6 @@ int	main(int argc, char **argv)
 		return (1);
 	init_philo(&param, &lst);
 	init_mutex(lst);
-	t_list	*node = lst;
-	for (int i = 0; i < (int)lst_size(lst); i++)
-	{
-		pthread_create(&((t_philo *)node->content)->thread, NULL, philoop, node);
-		node = node->next;
-	}
-	pthread_mutex_lock(&param.mutex_ready);
-	param.threads_ready = true;
-	param.time_zero = get_time();
-	pthread_mutex_unlock(&param.mutex_ready);
-	node = lst;
-	for (int i = 0; i < (int)lst_size(lst); i++)
-	{
-		pthread_join(((t_philo *)node->content)->thread, NULL);
-		node = node->next;
-	}
+	init_threads(lst);
 	return (0);
 }
