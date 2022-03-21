@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:45:39 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/20 23:32:07 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/21 19:03:02 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,21 +32,6 @@ void	monitor(t_philo *philo, int action)
 	else if (action == DIE)
 		printf(" died\n");
 	pthread_mutex_unlock(&philo->param->mutex_print);
-}
-
-void	destroy_mutex(t_list *lst)
-{
-	t_philo	*philo = (t_philo* ) lst->content;
-	pthread_mutex_destroy(&philo->param->mutex_ready);
-	pthread_mutex_destroy(&philo->param->mutex_death);
-	pthread_mutex_destroy(&philo->param->mutex_print);
-	for (size_t i = 0; i < lst_size(lst); i++)
-	{
-		pthread_mutex_destroy(&philo->mutex_fork);
-		pthread_mutex_destroy(&philo->mutex_last_eat);
-		philo = (t_philo* ) lst->content;
-		lst = lst->next;
-	}
 }
 
 int	main(int argc, char **argv)

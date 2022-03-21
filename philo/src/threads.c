@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:50:22 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/20 21:34:15 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/21 19:28:09 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,18 @@ bool	check_death(t_philo *philo)
 
 void	*philoop(void *arg)
 {
-	t_list	*node = (t_list *)arg;
-	t_philo	*philo = (t_philo*)node->content;
-	t_philo	*next_philo = (t_philo*)node->next->content;
+	t_list	*node;
+	t_philo	*philo;
+	t_philo	*next_philo;
 
+	node = (t_list *)arg;
+	philo = (t_philo *)node->content;
+	next_philo = (t_philo *)node->next->content;
 	pthread_mutex_lock(&philo->param->mutex_ready);
 	pthread_mutex_unlock(&philo->param->mutex_ready);
+	pthread_mutex_lock(&philo->mutex_last_eat);
 	philo->last_eat = get_time();
+	pthread_mutex_unlock(&philo->mutex_last_eat);
 	while (!check_death(philo))
 	{
 		eat(philo, next_philo);
@@ -62,5 +67,29 @@ void	*philoop(void *arg)
 		micro_sleep(philo->param->time_to_sleep);
 		monitor(philo, THINK);
 	}
-	return NULL;
+	return (NULL);
+}
+
+void	death_loop(t_list *lst)
+{
+	t_list	*node = lst;
+	t_philo	*philo;
+
+	while (true)
+	{
+		philo = (t_philo *)node->content;
+		pthread_mutex_lock(&philo->mutex_last_eat);
+		if (get_time() - philo->last_eat >= (uint64_t)philo->param->time_to_die)
+		{
+			pthread_mutex_unlock(&philo->mutex_last_eat);
+			monitor(philo, DIE);
+			pthread_mutex_lock(&philo->param->mutex_death);
+			philo->param->death = true;
+			pthread_mutex_unlock(&philo->param->mutex_death);
+			break ;
+		}
+		pthread_mutex_unlock(&philo->mutex_last_eat);
+		node = node->next;
+		usleep(30);
+	}
 }

@@ -62,21 +62,3 @@ void	lst_add_back(t_list **alst, t_list *new_node)
 		}
 	}
 }
-
-void	lst_clear(t_list *lst)
-{
-	t_list	*swap;
-	size_t	i;
-	size_t	len;
-
-	len = lst_size(lst);
-	i = 0;
-	while (i < len)
-	{
-		swap = lst->next;
-		free(lst->content);
-		free(lst);
-		lst = swap;
-		i++;
-	}
-}
