@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:50:22 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/21 19:40:42 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/21 20:17:03 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,29 +68,4 @@ void	*philoop(void *arg)
 		monitor(philo, THINK);
 	}
 	return (NULL);
-}
-
-void	death_loop(t_list *lst)
-{
-	t_list	*node;
-	t_philo	*philo;
-
-	node = lst;
-	while (true)
-	{
-		philo = (t_philo *)node->content;
-		pthread_mutex_lock(&philo->mutex_last_eat);
-		if (get_time() - philo->last_eat >= (uint64_t)philo->param->time_to_die)
-		{
-			pthread_mutex_unlock(&philo->mutex_last_eat);
-			monitor(philo, DIE);
-			pthread_mutex_lock(&philo->param->mutex_death);
-			philo->param->death = true;
-			pthread_mutex_unlock(&philo->param->mutex_death);
-			break ;
-		}
-		pthread_mutex_unlock(&philo->mutex_last_eat);
-		node = node->next;
-		usleep(30);
-	}
 }

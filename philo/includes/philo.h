@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:47:12 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/21 19:18:03 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/21 20:20:26 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,12 +84,14 @@ bool		init_threads(t_list *lst);
 /*threads*/
 bool		check_death(t_philo *philo);
 void		*philoop(void *arg);
-void		death_loop(t_list *lst);
-
-void		monitor(t_philo *philo, int action);
 
 /*clear*/
 void		lst_clear(t_list *lst);
 void		destroy_mutex(t_list *lst);
+
+/*monitor*/
+void		monitor(t_philo *philo, int action);
+void		death_loop(t_list *lst);
+void		join_philos(t_list *lst);
 
 #endif
