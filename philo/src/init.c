@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:48:06 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/21 20:58:28 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/21 21:01:48 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,5 @@ bool	init_threads(t_list *lst)
 	}
 	param->time_zero = get_time();
 	pthread_mutex_unlock(&param->mutex_ready);
-	micro_sleep(param->time_to_die);
 	return (false);
 }
