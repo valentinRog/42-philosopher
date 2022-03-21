@@ -6,11 +6,29 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:48:06 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/21 21:01:48 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/21 22:04:56 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+bool	init_param_mutex(t_param *param)
+{
+	if (pthread_mutex_init(&param->mutex_ready, NULL))
+		return (true);
+	if (pthread_mutex_init(&param->mutex_death, NULL))
+	{
+		pthread_mutex_destroy(&param->mutex_ready);
+		return (true);
+	}
+	if (pthread_mutex_init(&param->mutex_print, NULL))
+	{
+		pthread_mutex_destroy(&param->mutex_ready);
+		pthread_mutex_destroy(&param->mutex_death);
+		return (true);
+	}
+	return (false);
+}
 
 bool	fill_param(t_param *param, int argc, char **argv)
 {
@@ -35,8 +53,22 @@ bool	fill_param(t_param *param, int argc, char **argv)
 		param->number_of_eating = atoi_error(argv[5], &error);
 	else
 		param->number_of_eating = 10000000;
+	if (init_param_mutex(param))
+		return (true);
 	param->death = false;
 	return (error);
+}
+
+bool	init_philo_mutex(t_philo *philo)
+{
+	if (pthread_mutex_init(&philo->mutex_fork, NULL))
+		return (true);
+	if (pthread_mutex_init(&philo->mutex_last_eat, NULL))
+	{
+		pthread_mutex_destroy(&philo->mutex_fork);
+		return (true);
+	}
+	return (false);
 }
 
 bool	init_philo(t_param *param, t_list **alst)
@@ -55,41 +87,12 @@ bool	init_philo(t_param *param, t_list **alst)
 		philo->param = param;
 		philo->n_eaten = 0;
 		new_node = lst_new(philo);
-		if (!new_node)
+		if (!new_node || init_philo_mutex(philo))
 		{
 			free(philo);
 			return (true);
 		}
 		lst_add_back(alst, new_node);
-	}
-	return (false);
-}
-
-bool	init_mutex(t_list *lst)
-{
-	t_list	*node;
-	t_param	*param;
-	size_t	i;
-	t_philo	*philo;
-
-	node = lst;
-	param = ((t_philo *)node->content)->param;
-	if (pthread_mutex_init(&param->mutex_ready, NULL))
-		return (true);
-	if (pthread_mutex_init(&param->mutex_death, NULL))
-		return (true);
-	if (pthread_mutex_init(&param->mutex_print, NULL))
-		return (true);
-	i = 0;
-	while (i < lst_size(lst))
-	{
-		philo = (t_philo *)node->content;
-		if (pthread_mutex_init(&philo->mutex_fork, NULL))
-			return (true);
-		if (pthread_mutex_init(&philo->mutex_last_eat, NULL))
-			return (true);
-		node = node->next;
-		i++;
 	}
 	return (false);
 }
