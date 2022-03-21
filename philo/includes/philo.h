@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:47:12 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/20 21:26:00 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/20 23:09:43 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ typedef struct s_philo
 t_list		*lst_new(void *content);
 size_t		lst_size(t_list *lst);
 void		lst_add_back(t_list **alst, t_list *new_node);
+void		lst_clear(t_list *lst);
 
 /*utils*/
 int			atoi_error(char *str, bool *error);
@@ -77,9 +78,9 @@ void		micro_sleep(uint64_t time);
 
 /*init*/
 bool		fill_param(t_param *param, int argc, char **argv);
-void		init_philo(t_param *param, t_list **alst);
-void		init_mutex(t_list *lst);
-void		init_threads(t_list *lst);
+bool		init_philo(t_param *param, t_list **alst);
+bool		init_mutex(t_list *lst);
+bool		init_threads(t_list *lst);
 
 /*threads*/
 bool		check_death(t_philo *philo);

@@ -27,6 +27,9 @@ fclean: clean
 	$(RM) $(NAME)
 
 run: $(NAME)
-	./$(NAME) 4 310 200 100
+	./$(NAME) 10 310 200 100
+
+leaks: $(NAME)
+	valgrind ./$(NAME) 4 310 200 100
 
 re: fclean all
