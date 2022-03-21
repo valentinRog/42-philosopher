@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:45:39 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/21 21:01:55 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/21 21:20:55 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	main(int argc, char **argv)
 		return (1);
 	if (init_philo(&param, &lst) || init_mutex(lst) || init_threads(lst))
 	{
+		destroy_mutex(lst);
 		lst_clear(lst);
 		return (1);
 	}
