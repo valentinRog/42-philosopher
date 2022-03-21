@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 19:01:01 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/21 19:02:36 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/21 19:45:55 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,20 @@ void	lst_clear(t_list *lst)
 
 void	destroy_mutex(t_list *lst)
 {
-	t_philo	*philo = (t_philo* ) lst->content;
+	t_philo	*philo;
+	size_t	i;
+
+	philo = (t_philo *)lst->content;
 	pthread_mutex_destroy(&philo->param->mutex_ready);
 	pthread_mutex_destroy(&philo->param->mutex_death);
 	pthread_mutex_destroy(&philo->param->mutex_print);
-	for (size_t i = 0; i < lst_size(lst); i++)
+	i = 0;
+	while (i < lst_size(lst))
 	{
 		pthread_mutex_destroy(&philo->mutex_fork);
 		pthread_mutex_destroy(&philo->mutex_last_eat);
-		philo = (t_philo* ) lst->content;
+		philo = (t_philo *) lst->content;
 		lst = lst->next;
+		i++;
 	}
 }

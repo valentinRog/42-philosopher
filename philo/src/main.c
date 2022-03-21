@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:45:39 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/21 19:03:02 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/21 20:12:29 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,13 @@ int	main(int argc, char **argv)
 		return (1);
 	if (init_threads(lst))
 		return (1);
+	death_loop(lst);
+	t_list *node = lst;
+	for (int i = 0; i < (int)lst_size(lst); i++)
+	{
+		pthread_join(((t_philo *)node->content)->thread, NULL);
+		node = node->next;
+	}
 	lst_clear(lst);
 	return (0);
 }

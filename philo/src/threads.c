@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:50:22 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/21 19:28:09 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/21 19:40:42 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,10 @@ void	*philoop(void *arg)
 
 void	death_loop(t_list *lst)
 {
-	t_list	*node = lst;
+	t_list	*node;
 	t_philo	*philo;
 
+	node = lst;
 	while (true)
 	{
 		philo = (t_philo *)node->content;
