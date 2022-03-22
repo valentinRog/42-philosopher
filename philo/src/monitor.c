@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 20:16:29 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/22 09:59:21 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/22 11:39:34 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ void	monitor(t_philo *philo, int action)
 		printf(" is sleeping\n");
 	else if (action == THINK)
 		printf(" is thinking\n");
-	else if (action == DIE)
-		printf(" died\n");
 	pthread_mutex_unlock(&philo->param->mutex_print);
 }
 
@@ -46,16 +44,16 @@ void	death_loop(t_list *lst)
 		pthread_mutex_lock(&philo->mutex_last_eat);
 		if (get_time() - philo->last_eat >= (uint64_t)philo->param->time_to_die)
 		{
-			pthread_mutex_unlock(&philo->mutex_last_eat);
-			monitor(philo, DIE);
 			pthread_mutex_lock(&philo->param->mutex_death);
 			philo->param->death = true;
 			pthread_mutex_unlock(&philo->param->mutex_death);
+			pthread_mutex_unlock(&philo->mutex_last_eat);
+			printf("%llu", get_time() - philo->param->time_zero);
+			printf(" %d died\n", philo->index);
 			break ;
 		}
 		pthread_mutex_unlock(&philo->mutex_last_eat);
 		node = node->next;
-		usleep(30);
 	}
 }
 
