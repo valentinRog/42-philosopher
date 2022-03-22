@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 20:16:29 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/22 11:39:34 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/22 16:10:59 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,28 @@ void	monitor(t_philo *philo, int action)
 	pthread_mutex_unlock(&philo->param->mutex_print);
 }
 
+bool	eat_enough(t_list *lst)
+{
+	size_t	i;
+	t_philo	*philo;
+
+	i = 0;
+	while (i < lst_size(lst))
+	{
+		philo = (t_philo *)lst->content;
+		pthread_mutex_lock(&philo->mutex_n_eaten);
+		if (philo->n_eaten < philo->param->number_of_eating)
+		{
+			pthread_mutex_unlock(&philo->mutex_n_eaten);
+			return (false);
+		}
+		pthread_mutex_unlock(&philo->mutex_n_eaten);
+		lst = lst->next;
+		i++;
+	}
+	return (true);
+}
+
 void	death_loop(t_list *lst)
 {
 	t_list	*node;
@@ -41,6 +63,8 @@ void	death_loop(t_list *lst)
 	while (true)
 	{
 		philo = (t_philo *)node->content;
+		if (eat_enough(lst))
+			break ;
 		pthread_mutex_lock(&philo->mutex_last_eat);
 		if (get_time() - philo->last_eat >= (uint64_t)philo->param->time_to_die)
 		{

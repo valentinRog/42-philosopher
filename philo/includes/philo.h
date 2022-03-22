@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:47:12 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/22 10:18:57 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/22 16:10:09 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_philo
 	int				n_eaten;
 	pthread_mutex_t	mutex_last_eat;
 	pthread_mutex_t	mutex_fork;
+	pthread_mutex_t	mutex_n_eaten;
 }	t_philo;
 
 /*circular_lst*/
@@ -90,6 +91,7 @@ void		destroy_param_mutex(t_param *param);
 
 /*monitor*/
 void		monitor(t_philo *philo, int action);
+bool		eat_enough(t_list *lst);
 void		death_loop(t_list *lst);
 void		join_philos(t_list *lst);
 

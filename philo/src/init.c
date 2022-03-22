@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:48:06 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/22 11:19:56 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/22 16:02:23 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,12 @@ bool	init_philo_mutex(t_philo *philo)
 	if (pthread_mutex_init(&philo->mutex_last_eat, NULL))
 	{
 		pthread_mutex_destroy(&philo->mutex_fork);
+		return (true);
+	}
+	if (pthread_mutex_init(&philo->mutex_n_eaten, NULL))
+	{
+		pthread_mutex_destroy(&philo->mutex_fork);
+		pthread_mutex_destroy(&philo->mutex_last_eat);
 		return (true);
 	}
 	return (false);

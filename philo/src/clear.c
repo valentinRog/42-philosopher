@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 19:01:01 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/21 21:57:29 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/22 16:10:46 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	lst_clear(t_list *lst)
 		swap = lst->next;
 		pthread_mutex_destroy(&philo->mutex_fork);
 		pthread_mutex_destroy(&philo->mutex_last_eat);
+		pthread_mutex_destroy(&philo->mutex_n_eaten);
 		free(lst->content);
 		free(lst);
 		lst = swap;
