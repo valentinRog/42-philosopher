@@ -26,7 +26,4 @@ clean:
 fclean: clean
 	$(RM) $(NAME)
 
-run: $(NAME)
-	./$(NAME) 4 410 200 200 12
-
 re: fclean all
