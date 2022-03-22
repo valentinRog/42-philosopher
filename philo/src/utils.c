@@ -6,32 +6,30 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 13:19:00 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/21 19:15:37 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/22 10:14:45 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	atoi_error(char *str, bool *error)
+bool	atoi_error(char *str, int *nb)
 {
-	uint32_t	sum;
-	bool		error_val;
+	uint64_t	sum;
 
 	sum = 0;
-	error_val = false;
 	if (!*str)
-		error_val = true;
+		return (true);
 	while (*str >= '0' && *str <= '9')
 	{
 		sum *= 10;
 		sum += *str - '0';
 		if (sum > INT_MAX)
-			error_val = true;
+			return (true);
 		str++;
 	}
 	if (*str)
-		error_val = true;
-	if (error)
-		*error = error_val;
-	return (sum);
+		return (true);
+	if (nb)
+		*nb = sum;
+	return (false);
 }
