@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 20:16:29 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/21 20:20:37 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/22 09:59:21 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	monitor(t_philo *philo, int action)
 		pthread_mutex_unlock(&philo->param->mutex_print);
 		return ;
 	}
-	printf("%ld %d", get_time() - philo->param->time_zero, philo->index);
+	printf("%llu %d", get_time() - philo->param->time_zero, philo->index);
 	if (action == FORK)
 		printf(" has taken a fork\n");
 	else if (action == EAT)

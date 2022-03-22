@@ -6,7 +6,7 @@ INCLUDES = includes
 
 OBJ = $(SRC:.c=.o)
 
-CFLAGS = -Wall -Wextra -Werror  #-fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror  -fsanitize=thread
 
 CC = gcc
 
@@ -28,8 +28,5 @@ fclean: clean
 
 run: $(NAME)
 	./$(NAME) 10 310 200 100
-
-leaks: $(NAME)
-	valgrind ./$(NAME) 4 310 200 100
 
 re: fclean all
