@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 20:16:29 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/22 16:10:59 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/22 18:27:37 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,13 @@ bool	eat_enough(t_list *lst)
 	return (true);
 }
 
+void	set_death(t_param *param)
+{
+	pthread_mutex_lock(&param->mutex_death);
+	param->death = true;
+	pthread_mutex_unlock(&param->mutex_death);
+}
+
 void	death_loop(t_list *lst)
 {
 	t_list	*node;
@@ -64,13 +71,14 @@ void	death_loop(t_list *lst)
 	{
 		philo = (t_philo *)node->content;
 		if (eat_enough(lst))
-			break ;
-		pthread_mutex_lock(&philo->mutex_last_eat);
-		if (get_time() - philo->last_eat >= (uint64_t)philo->param->time_to_die)
 		{
-			pthread_mutex_lock(&philo->param->mutex_death);
-			philo->param->death = true;
-			pthread_mutex_unlock(&philo->param->mutex_death);
+			set_death(philo->param);
+			break ;
+		}
+		pthread_mutex_lock(&philo->mutex_last_eat);
+		if (get_time() - philo->last_eat > (uint64_t)philo->param->time_to_die)
+		{
+			set_death(philo->param);
 			pthread_mutex_unlock(&philo->mutex_last_eat);
 			printf("%llu", get_time() - philo->param->time_zero);
 			printf(" %d died\n", philo->index);

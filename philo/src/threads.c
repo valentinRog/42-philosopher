@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:50:22 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/22 16:09:52 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/22 18:15:37 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ static void	eat(t_philo *philo, t_philo *next_philo)
 	micro_sleep(philo->param->time_to_eat);
 	pthread_mutex_unlock(&philo->mutex_fork);
 	pthread_mutex_unlock(&next_philo->mutex_fork);
-	pthread_mutex_lock(&philo->mutex_n_eaten);
-	philo->n_eaten++;
-	pthread_mutex_unlock(&philo->mutex_n_eaten);
 	pthread_mutex_lock(&philo->mutex_last_eat);
 	philo->last_eat = get_time();
 	pthread_mutex_unlock(&philo->mutex_last_eat);
+	pthread_mutex_lock(&philo->mutex_n_eaten);
+	philo->n_eaten++;
+	pthread_mutex_unlock(&philo->mutex_n_eaten);
 }
 
 bool	check_death(t_philo *philo)
@@ -63,8 +63,6 @@ void	*philoop(void *arg)
 	while (!check_death(philo))
 	{
 		eat(philo, next_philo);
-		if (eat_enough(node))
-			break ;
 		monitor(philo, SLEEP);
 		micro_sleep(philo->param->time_to_sleep);
 		monitor(philo, THINK);
