@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:47:12 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/23 07:02:35 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/23 07:10:15 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 # include <stdbool.h>
 # include <pthread.h>
 # include <sys/time.h>
-# include <stdint.h>
 # include <limits.h>
+# include <inttypes.h>
 
 enum
 {
