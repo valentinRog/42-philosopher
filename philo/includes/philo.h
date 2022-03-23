@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:47:12 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/22 16:10:09 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/23 07:02:35 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,6 @@ void		lst_add_back(t_list **alst, t_list *new_node);
 
 /*utils*/
 bool		atoi_error(char *str, int *nb);
-
-/*time*/
 uint64_t	get_time(void);
 void		micro_sleep(uint64_t time);
 
