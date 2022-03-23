@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:50:22 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/23 11:37:10 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/23 12:31:50 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	eat(t_philo *philo, t_philo *next_philo)
 {
-	if (philo->index % 2)
+	if (philo->index > next_philo->index)
 	{
 		pthread_mutex_lock(&philo->mutex_fork);
 		monitor(philo, FORK);
@@ -64,6 +64,8 @@ void	*philoop(void *arg)
 	pthread_mutex_lock(&philo->mutex_last_eat);
 	philo->last_eat = get_time();
 	pthread_mutex_unlock(&philo->mutex_last_eat);
+	if (philo->index % 2)
+		micro_sleep(philo->param->time_to_eat / 2);
 	while (!check_death(philo))
 	{
 		if (philo != next_philo)
