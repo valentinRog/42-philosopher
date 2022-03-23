@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:48:06 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/22 16:02:23 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/23 11:37:56 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,13 +76,13 @@ bool	init_philo(t_param *param, t_list **alst)
 	t_philo	*philo;
 	t_list	*new_node;
 
-	i = -1;
-	while (++i < param->number_of_philo)
+	i = 0;
+	while (i < param->number_of_philo)
 	{
 		philo = malloc(sizeof(t_philo));
 		if (!philo)
 			return (true);
-		philo->index = i + 1;
+		philo->index = i;
 		philo->param = param;
 		philo->n_eaten = 0;
 		new_node = lst_new(philo);
@@ -92,6 +92,7 @@ bool	init_philo(t_param *param, t_list **alst)
 			return (true);
 		}
 		lst_add_back(alst, new_node);
+		i++;
 	}
 	return (false);
 }

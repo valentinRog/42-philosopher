@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 20:16:29 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/23 09:30:58 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/23 11:37:24 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	monitor(t_philo *philo, int action)
 		return ;
 	}
 	printf("%" PRIu64, get_time() - philo->param->time_zero);
-	printf(" %d", philo->index);
+	printf(" %d", philo->index + 1);
 	if (action == FORK)
 		printf(" has taken a fork\n");
 	else if (action == EAT)
@@ -30,6 +30,8 @@ void	monitor(t_philo *philo, int action)
 		printf(" is sleeping\n");
 	else if (action == THINK)
 		printf(" is thinking\n");
+	else if (action == FORK)
+		printf(" has taken a fork\n");
 	pthread_mutex_unlock(&philo->param->mutex_print);
 }
 
@@ -82,7 +84,7 @@ void	death_loop(t_list *lst)
 			set_death(philo->param);
 			pthread_mutex_unlock(&philo->mutex_last_eat);
 			printf("%" PRIu64, get_time() - philo->param->time_zero);
-			printf(" %d died\n", philo->index);
+			printf(" %d died\n", philo->index + 1);
 			break ;
 		}
 		pthread_mutex_unlock(&philo->mutex_last_eat);
