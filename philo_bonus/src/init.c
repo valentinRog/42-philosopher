@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:48:06 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/24 11:10:12 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/24 15:23:37 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 bool	init_sem(t_param *param)
 {
+	sem_unlink(SEM_READY);
 	sem_unlink(SEM_FORKS);
 	sem_unlink(SEM_PRINT);
 	sem_unlink(SEM_LAST_EAT);
@@ -52,10 +53,14 @@ bool	init_process(t_param *param)
 	sem_wait(param->sem_ready);
 	for (int i = 0; i < param->number_of_philo; i++)
 	{
+		param->index = i;
 		pid_arr[i] = fork();
 		if (!pid_arr[i])
 			process(param, i);
 	}
 	sem_post(param->sem_ready);
+	wait(NULL);
+	for (int i = 0; i < PHILO_MAX; i++)
+		kill(pid_arr[i], SIGCHLD);
 	return (false);
 }

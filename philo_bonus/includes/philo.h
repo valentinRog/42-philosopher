@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:47:12 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/24 11:08:01 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/24 12:52:58 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <limits.h>
 # include <inttypes.h>
 # include <semaphore.h>
+# include <signal.h>
 
 # define PHILO_MAX 50
 
@@ -53,7 +54,9 @@ typedef struct s_param
 	int			time_to_eat;
 	int			time_to_sleep;
 	int			number_of_eating;
+	int			index;
 	uint64_t	time_zero;
+	uint64_t	last_eat;
 	sem_t		*sem_ready;
 	sem_t		*sem_forks;
 	sem_t		*sem_print;
@@ -70,6 +73,6 @@ bool		fill_param(t_param *param, int argc, char **argv);
 bool		init_process(t_param *param);
 
 /*process*/
-void	process(t_param *param, int index);
+void		process(t_param *param, int index);
 
 #endif
