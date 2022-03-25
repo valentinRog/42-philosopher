@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 09:57:52 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 14:43:24 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/25 16:14:16 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ void	*death_loop(void *args)
 		{
 			sem_post(philo->param->sem_last_eat);
 			sem_wait(philo->param->sem_print);
-			printf("%" PRId64" %d died\n", get_time() -  philo->param->time_zero, philo->index);
+			printf("%" PRId64, get_time() -  philo->param->time_zero);
+			printf(" %d died\n", philo->index);
 			exit(EXIT_SUCCESS);
 		}
 		sem_post(philo->param->sem_last_eat);
@@ -61,10 +62,14 @@ static void	eat(t_philo *philo)
 	sem_wait(philo->param->sem_last_eat);
 	philo->param->last_eat = get_time();
 	sem_post(philo->param->sem_last_eat);
+	philo->n_eaten++;
+	if (philo->n_eaten >= philo->param->number_of_eating)
+		sem_post(philo->sem_n_eaten);
 }
 
 void	process(t_philo *philo)
 {
+	sem_wait(philo->sem_n_eaten);
 	sem_wait(philo->param->sem_ready);
 	sem_post(philo->param->sem_ready);
 	philo->param->time_zero = get_time();

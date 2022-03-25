@@ -6,19 +6,23 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:48:06 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 14:36:06 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/25 16:30:36 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-bool	init_sem(t_param *param)
+bool	init_param_sem(t_param *param)
 {
 	unlink_param();
 	param->sem_ready = sem_open(SEM_READY, O_CREAT, 0660, 1);
 	param->sem_forks = sem_open(SEM_FORKS, O_CREAT, 0660, param->number_of_philo);
 	param->sem_print = sem_open(SEM_PRINT, O_CREAT, 0660, 1);
 	param->sem_last_eat = sem_open(SEM_LAST_EAT, O_CREAT, 0660, 1);
+	if (param->sem_ready == SEM_FAILED || param->sem_forks == SEM_FAILED)
+		return (true);
+	if (param->sem_print == SEM_FAILED || param->sem_last_eat == SEM_FAILED)
+		return (true);
 	return (false);
 }
 
@@ -38,74 +42,49 @@ bool	init_param(t_param *param, int argc, char **argv)
 	if (argc == 6)
 		if (atoi_error(argv[5], &param->number_of_eating))
 			return (true);
-	if (init_sem(param))
+	if (init_param_sem(param))
 		return (true);
 	return (false);
 }
 
-static void kill_all(t_list *lst)
+static t_philo	*new_philo(t_param *param, int index)
 {
-	t_list	*node = lst;
 	t_philo	*philo;
-	for (int i = 0; i < lst_size(lst); i++)
+
+	philo = malloc(sizeof(t_philo));
+	if (!philo)
+		return (NULL);
+	philo->index = index;
+	philo->param = param;
+	philo->sem_n_eaten_name = ft_itoa(index);
+	if (!philo->sem_n_eaten_name)
 	{
-		philo = (t_philo *)node->content;
-		kill(philo->pid, SIGKILL);
-		node = node->next;
+		free(philo);
+		return (NULL);
 	}
+	philo->n_eaten = 0;
+	philo->pid = -1;
+	sem_unlink(philo->sem_n_eaten_name);
+	philo->sem_n_eaten = sem_open(philo->sem_n_eaten_name, O_CREAT, 0660, 1);
+	return (philo);
 }
 
 bool	init_philo(t_param *param, t_list **alst)
 {
 	int		i;
-	t_philo	*philo;
 	t_list	*new_node;
 
 	i = 0;
 	while (i < param->number_of_philo)
 	{
-		philo = malloc(sizeof(t_philo));
-		if (!philo)
-			return (true);
-		philo->index = i;
-		philo->param = param;
-		philo->sem_n_eaten_name = ft_itoa(i);
-		sem_unlink(philo->sem_n_eaten_name);
-		philo->sem_n_eaten = sem_open(philo->sem_n_eaten_name, O_CREAT, 0660, param->number_of_eating);
-		new_node = lst_new(philo);
-		if (!new_node)
+		new_node = lst_new(new_philo(param, i));
+		if (!new_node || !new_node->content)
 		{
-			free(philo);
+			lst_clear(*alst);
 			return (true);
 		}
 		lst_add_back(alst, new_node);
 		i++;
 	}
-	return (false);
-}
-
-bool	init_process(t_list *lst)
-{
-	t_philo	*philo;
-	t_param	*param;
-	t_list	*node;
-
-	param = ((t_philo *)lst->content)->param;
-	node = lst;
-	sem_wait(param->sem_ready);
-	for (int i = 0; i < lst_size(lst); i++)
-	{
-		philo = (t_philo *)node->content;
-		philo->pid = fork();
-		if (!philo->pid)
-		{
-			process(philo);
-			exit(EXIT_SUCCESS);
-		}
-		node = node->next;
-	}
-	sem_post(param->sem_ready);
-	wait(NULL);
-	kill_all(lst);
 	return (false);
 }

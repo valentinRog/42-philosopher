@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 12:41:31 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 13:10:40 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/25 16:32:42 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,20 @@ void	unlink_param()
 	sem_unlink(SEM_LAST_EAT);
 }
 
+
+static void	lst_delone(t_list *lst)
+{
+	t_philo	*philo;
+	if (lst)
+	{
+		philo = (t_philo *)lst->content;
+		sem_unlink(philo->sem_n_eaten_name);
+		free(philo->sem_n_eaten_name);
+		free(lst->content);
+		free(lst);
+	}
+}
+
 void	lst_clear(t_list *lst)
 {
 	t_list	*swap;
@@ -31,12 +45,8 @@ void	lst_clear(t_list *lst)
 	i = 0;
 	while (i < len)
 	{
-		philo = (t_philo *)lst->content;
 		swap = lst->next;
-		sem_unlink(philo->sem_n_eaten_name);
-		free(philo->sem_n_eaten_name);
-		free(lst->content);
-		free(lst);
+		lst_delone(lst);
 		lst = swap;
 		i++;
 	}

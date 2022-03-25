@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:45:39 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 13:16:49 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/25 16:33:46 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,11 @@ int	main(int argc, char **argv)
 	t_list	*lst;
 
 	lst = NULL;
-	init_param(&param, argc, argv);
-	init_philo(&param, &lst);
+	if (init_param(&param, argc, argv) || init_philo(&param, &lst))
+	{
+		unlink_param();
+		return (1);
+	}
 	init_process(lst);
 	unlink_param();
 	lst_clear(lst);

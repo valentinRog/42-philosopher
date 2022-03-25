@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:47:12 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 14:43:00 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/25 16:32:39 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ typedef struct s_philo
 {
 	int		index;
 	int		pid;
+	int		n_eaten;
 	sem_t	*sem_n_eaten;
 	char	*sem_n_eaten_name;
 	t_param	*param;
