@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:47:12 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/23 07:10:15 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/25 16:35:49 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef struct s_list
 
 typedef struct s_param
 {
-	int				number_of_philo;
+	int				n_philo;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
