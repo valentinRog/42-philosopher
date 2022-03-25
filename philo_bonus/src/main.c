@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:45:39 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/24 11:39:23 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/25 13:10:53 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,12 @@
 int	main(int argc, char **argv)
 {
 	t_param	param;
-	fill_param(&param, argc, argv);
-	init_process(&param);
-	sem_unlink(SEM_READY);
-	sem_unlink(SEM_FORKS);
-	sem_unlink(SEM_PRINT);
-	sem_unlink(SEM_LAST_EAT);
+	t_list	*lst;
+
+	lst = NULL;
+	init_param(&param, argc, argv);
+	init_philo(&param, &lst);
+	unlink_param();
+	lst_clear(lst);
 	return (0);
 }

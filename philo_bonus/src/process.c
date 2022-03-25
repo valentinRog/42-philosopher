@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 09:57:52 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/24 15:16:38 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/25 10:50:46 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	*death_loop(void *args)
 
 	while (true)
 	{
-		sem_wait(param->sem_ready);
+		sem_wait(param->sem_last_eat);
 		
 		if (get_time() - param->last_eat > (uint64_t)param->time_to_die)
 		{
@@ -27,7 +27,7 @@ void	*death_loop(void *args)
 			printf("%" PRId64"%d died\n", get_time(), param->index);
 			exit(EXIT_SUCCESS);
 		}
-		sem_post(param->sem_ready);
+		sem_post(param->sem_last_eat);
 	}
 	return (NULL);
 }
@@ -37,7 +37,6 @@ void	process(t_param *param, int index)
 	pthread_t	thread;
 	sem_wait(param->sem_ready);
 	sem_post(param->sem_ready);
-	usleep(1000000);
 	uint64_t	t_zero = get_time();
 	sem_wait(param->sem_last_eat);
 	param->last_eat = get_time();
@@ -54,9 +53,9 @@ void	process(t_param *param, int index)
 		sem_post(param->sem_forks);
 		sem_post(param->sem_forks);
 
-		sem_wait(param->sem_ready);
+		sem_wait(param->sem_last_eat);
 		param->last_eat = get_time();
-		sem_post(param->sem_ready);
+		sem_post(param->sem_last_eat);
 
 		sem_wait(param->sem_print);
 		printf("%" PRId64 " %d is sleeping\n",get_time() - t_zero, index + 1);
