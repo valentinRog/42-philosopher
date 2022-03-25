@@ -6,13 +6,13 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 12:41:31 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 16:32:42 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/25 16:36:43 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	unlink_param()
+void	unlink_param(void)
 {
 	sem_unlink(SEM_READY);
 	sem_unlink(SEM_FORKS);
@@ -20,10 +20,10 @@ void	unlink_param()
 	sem_unlink(SEM_LAST_EAT);
 }
 
-
 static void	lst_delone(t_list *lst)
 {
 	t_philo	*philo;
+
 	if (lst)
 	{
 		philo = (t_philo *)lst->content;

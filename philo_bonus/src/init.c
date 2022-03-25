@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:48:06 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 16:30:36 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/25 16:35:49 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ bool	init_param_sem(t_param *param)
 {
 	unlink_param();
 	param->sem_ready = sem_open(SEM_READY, O_CREAT, 0660, 1);
-	param->sem_forks = sem_open(SEM_FORKS, O_CREAT, 0660, param->number_of_philo);
+	param->sem_forks = sem_open(SEM_FORKS, O_CREAT, 0660, param->n_philo);
 	param->sem_print = sem_open(SEM_PRINT, O_CREAT, 0660, 1);
 	param->sem_last_eat = sem_open(SEM_LAST_EAT, O_CREAT, 0660, 1);
 	if (param->sem_ready == SEM_FAILED || param->sem_forks == SEM_FAILED)
@@ -31,7 +31,7 @@ bool	init_param(t_param *param, int argc, char **argv)
 	if (argc < 5 || argc > 6)
 		return (true);
 	param->number_of_eating = 10000000;
-	if (atoi_error(argv[1], &param->number_of_philo))
+	if (atoi_error(argv[1], &param->n_philo))
 		return (true);
 	if (atoi_error(argv[2], &param->time_to_die))
 		return (true);
@@ -75,7 +75,7 @@ bool	init_philo(t_param *param, t_list **alst)
 	t_list	*new_node;
 
 	i = 0;
-	while (i < param->number_of_philo)
+	while (i < param->n_philo)
 	{
 		new_node = lst_new(new_philo(param, i));
 		if (!new_node || !new_node->content)
