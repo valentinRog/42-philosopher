@@ -6,7 +6,7 @@ INCLUDES = includes
 
 OBJ = $(SRC:.c=.o)
 
-CFLAGS = -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -fsanitize=thread
 
 CC = gcc
 
@@ -25,8 +25,5 @@ clean:
 
 fclean: clean
 	$(RM) $(NAME)
-
-run: $(NAME)
-	./$(NAME) 4 800 200 100 5
 
 re: fclean all

@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 12:41:31 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 16:36:43 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/25 17:37:00 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	lst_clear(t_list *lst)
 	t_list	*swap;
 	size_t	i;
 	size_t	len;
-	t_philo	*philo;
 
 	len = lst_size(lst);
 	i = 0;
