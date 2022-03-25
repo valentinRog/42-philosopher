@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:48:06 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 13:10:45 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/25 13:26:01 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,30 @@ bool	init_philo(t_param *param, t_list **alst)
 		lst_add_back(alst, new_node);
 		i++;
 	}
+	return (false);
+}
+
+bool	init_process(t_list *lst)
+{
+	t_philo	*philo;
+	t_param	*param;
+	t_list	*node;
+
+	param = ((t_philo *)lst->content)->param;
+	node = lst;
+	sem_wait(param->sem_ready);
+	for (int i = 0; i < lst_size(lst); i++)
+	{
+		philo = (t_philo *)node->content;
+		philo->pid = fork();
+		if (!philo->pid)
+		{
+			process(philo);
+			exit(EXIT_SUCCESS);
+		}
+		node = node->next;
+	}
+	sem_post(param->sem_ready);
+	wait(NULL);
 	return (false);
 }

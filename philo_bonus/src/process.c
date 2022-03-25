@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 09:57:52 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 10:50:46 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/25 13:26:22 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,38 +32,9 @@ void	*death_loop(void *args)
 	return (NULL);
 }
 
-void	process(t_param *param, int index)
+void	process(t_philo *philo)
 {
-	pthread_t	thread;
-	sem_wait(param->sem_ready);
-	sem_post(param->sem_ready);
-	uint64_t	t_zero = get_time();
-	sem_wait(param->sem_last_eat);
-	param->last_eat = get_time();
-	sem_post(param->sem_last_eat);
-	pthread_create(&thread, NULL, death_loop, param);
-	while (true)
-	{
-		sem_wait(param->sem_forks);
-		sem_wait(param->sem_forks);
-		sem_wait(param->sem_print);
-		printf("%" PRId64 " %d is eating\n",get_time() - t_zero, index + 1);
-		sem_post(param->sem_print);
-		micro_sleep(param->time_to_eat);
-		sem_post(param->sem_forks);
-		sem_post(param->sem_forks);
-
-		sem_wait(param->sem_last_eat);
-		param->last_eat = get_time();
-		sem_post(param->sem_last_eat);
-
-		sem_wait(param->sem_print);
-		printf("%" PRId64 " %d is sleeping\n",get_time() - t_zero, index + 1);
-		sem_post(param->sem_print);
-		micro_sleep(param->time_to_sleep);
-		sem_wait(param->sem_print);
-		printf("%" PRId64 " %d is thinking\n",get_time() - t_zero, index + 1);
-		sem_post(param->sem_print);
-	}
-	exit(EXIT_SUCCESS);
+	sem_wait(philo->param->sem_ready);
+	sem_post(philo->param->sem_ready);
+	printf("%d\n", philo->index + 1);
 }
