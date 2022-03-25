@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:48:06 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 13:26:01 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/25 14:36:06 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,18 @@ bool	init_param(t_param *param, int argc, char **argv)
 	if (init_sem(param))
 		return (true);
 	return (false);
+}
+
+static void kill_all(t_list *lst)
+{
+	t_list	*node = lst;
+	t_philo	*philo;
+	for (int i = 0; i < lst_size(lst); i++)
+	{
+		philo = (t_philo *)node->content;
+		kill(philo->pid, SIGKILL);
+		node = node->next;
+	}
 }
 
 bool	init_philo(t_param *param, t_list **alst)
@@ -94,5 +106,6 @@ bool	init_process(t_list *lst)
 	}
 	sem_post(param->sem_ready);
 	wait(NULL);
+	kill_all(lst);
 	return (false);
 }

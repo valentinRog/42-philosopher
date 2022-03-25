@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:47:12 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 13:20:20 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/25 14:43:00 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ typedef struct s_param
 	int			time_to_eat;
 	int			time_to_sleep;
 	int			number_of_eating;
-	int			index;
 	uint64_t	time_zero;
 	uint64_t	last_eat;
 	sem_t		*sem_ready;
