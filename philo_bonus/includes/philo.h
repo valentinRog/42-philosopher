@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:47:12 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 16:41:34 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/25 17:26:15 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,9 @@ char		*ft_itoa(int n);
 /*init*/
 bool		init_param(t_param *param, int argc, char **argv);
 bool		init_philo(t_param *param, t_list **alst);
-bool		init_process(t_list *lst);
+
+/*launch*/
+void		launch_process(t_list *lst);
 
 /*process*/
 void		process(t_philo *philo);

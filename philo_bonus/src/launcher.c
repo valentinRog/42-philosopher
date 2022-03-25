@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 16:16:55 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 16:59:49 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/25 17:30:05 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	kill_all(t_list *lst)
 {
-	t_list	*node = lst;
+	t_list	*node;
 	t_philo	*philo;
 	size_t	i;
 
@@ -46,36 +46,56 @@ static void	*watch_n_eaten(void *args)
 		node = node->next;
 		i++;
 	}
-	return (NULL);	
+	return (NULL);
 }
 
-bool	init_process(t_list *lst)
+static int	fork_safe(t_list *lst)
 {
-	t_philo		*philo;
-	t_param		*param;
-	t_list		*node;
+	int	pid;
 
-	param = ((t_philo *)lst->content)->param;
-	node = lst;
-	sem_wait(param->sem_ready);
-	for (int i = 0; i < lst_size(lst); i++)
+	pid = fork();
+	if (pid < 0)
 	{
-		philo = (t_philo *)node->content;
-		philo->pid = fork();
-		if (!philo->pid)
-			process(philo);
-		else if (philo->pid < 0)
-			exit(EXIT_FAILURE);
-		node = node->next;
+		kill_all(lst);
+		lst_clear(lst);
+		unlink_param();
+		exit(EXIT_FAILURE);
 	}
-	sem_post(param->sem_ready);
-	sleep(1);
-	if (!fork())
+	return (pid);
+}
+
+static void	watch_process(t_list *lst)
+{
+	micro_sleep(((t_philo *)lst->content)->param->time_to_eat);
+	if (!fork_safe(lst))
 	{
 		watch_n_eaten(lst);
 		exit(EXIT_SUCCESS);
 	}
 	wait(NULL);
 	kill_all(lst);
-	return (false);
+}
+
+void	launch_process(t_list *lst)
+{
+	t_philo		*philo;
+	t_param		*param;
+	t_list		*node;
+	size_t		i;
+
+	param = ((t_philo *)lst->content)->param;
+	node = lst;
+	sem_wait(param->sem_ready);
+	i = 0;
+	while (i < lst_size(lst))
+	{
+		philo = (t_philo *)node->content;
+		philo->pid = fork_safe(lst);
+		if (!philo->pid)
+			process(philo);
+		node = node->next;
+		i++;
+	}
+	sem_post(param->sem_ready);
+	watch_process(lst);
 }

@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:45:39 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 16:33:46 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/25 17:20:42 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	main(int argc, char **argv)
 		unlink_param();
 		return (1);
 	}
-	init_process(lst);
+	launch_process(lst);
 	unlink_param();
 	lst_clear(lst);
 	return (0);
