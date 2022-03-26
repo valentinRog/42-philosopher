@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/26 22:34:24 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/26 22:40:46 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/26 22:51:58 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	death_loop(t_list *lst)
 	}
 }
 
-bool	init_threads(t_list *lst)
+bool	launch_threads(t_list *lst)
 {
 	t_list		*node;
 	t_param		*param;

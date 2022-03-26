@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:47:12 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/26 22:39:20 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/26 22:51:58 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void		destroy_param_mutex(t_param *param);
 
 /*launcher*/
 void		death_loop(t_list *lst);
-bool		init_threads(t_list *lst);
+bool		launch_threads(t_list *lst);
 void		join_philos(t_list *lst);
 
 #endif
