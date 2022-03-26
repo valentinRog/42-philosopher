@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 13:06:03 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 16:37:28 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/26 19:34:21 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ char	*ft_itoa(int n)
 	s_byte = 0;
 	if (n < 0)
 		s_byte = 1;
-	dst = calloc(number_of_digits(n) + 1 + s_byte, 1);
+	dst = malloc((number_of_digits(n) + 1 + s_byte) * sizeof(char));
+	memset(dst, '\0', number_of_digits(n) + 1 + s_byte);
 	if (!dst)
 		return (NULL);
 	putnbr_buff(n, dst);
