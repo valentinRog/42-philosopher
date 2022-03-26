@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 09:57:52 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/26 22:12:13 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/26 22:25:53 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,12 @@ void	monitor(t_philo *philo, int action)
 
 void	*death_loop(void *args)
 {
+	t_list	*lst;
 	t_philo	*philo;
 	t_param	*param;
 
-	philo = (t_philo *)args;
+	lst = (t_list *)args;
+	philo = (t_philo *)lst->content;
 	param = philo->param;
 	while (true)
 	{
@@ -46,6 +48,7 @@ void	*death_loop(void *args)
 			sem_wait(param->sem_print);
 			printf("%" PRId64, get_time() - param->time_zero);
 			printf(" %d died\n", philo->index);
+			clear_all(lst);
 			exit(EXIT_SUCCESS);
 		}
 		sem_post(param->sem_last_eat);
@@ -71,17 +74,22 @@ static void	eat(t_philo *philo)
 		sem_post(philo->sem_n_eaten);
 }
 
-void	process(t_philo *philo)
+void	process(t_list	*lst)
 {
+	t_philo		*philo;
 	pthread_t	thread;
 
+	philo = (t_philo *)lst->content;
 	sem_wait(philo->sem_n_eaten);
 	sem_wait(philo->param->sem_ready);
 	sem_post(philo->param->sem_ready);
 	philo->param->time_zero = get_time();
 	philo->param->last_eat = get_time();
-	if (pthread_create(&thread, NULL, death_loop, philo))
+	if (pthread_create(&thread, NULL, death_loop, lst))
+	{
+		clear_all(lst);
 		exit(EXIT_FAILURE);
+	}
 	if (philo->index >= philo->param->n_philo / 2)
 		micro_sleep(philo->param->time_to_eat / 3);
 	while (true)

@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 16:16:55 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/26 22:07:01 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/26 22:21:53 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void	launch_process(t_list *lst)
 		philo->pid = fork_safe(lst);
 		if (!philo->pid)
 		{
-			process(philo);
+			process(node);
 			exit(EXIT_SUCCESS);
 		}
 		node = node->next;

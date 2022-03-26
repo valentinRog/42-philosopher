@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 12:41:31 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/26 22:04:30 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/26 22:26:19 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,11 @@ void	lst_clear(t_list *lst)
 		lst = swap;
 		i++;
 	}
+}
+
+void	clear_all(t_list *lst)
+{
+	close_param_sem(((t_philo *)lst->content)->param);
+	unlink_param();
+	lst_clear(lst);
 }
