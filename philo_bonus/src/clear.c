@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 12:41:31 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/26 16:54:24 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/26 21:57:01 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ static void	lst_delone(t_list *lst)
 	if (lst)
 	{
 		philo = (t_philo *)lst->content;
+		sem_close(philo->sem_n_eaten);
 		sem_unlink(philo->sem_n_eaten_name);
 		free(philo->sem_n_eaten_name);
 		free(lst->content);
