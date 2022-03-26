@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 09:57:52 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 16:40:34 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/26 19:51:51 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,9 @@ void	*death_loop(void *args)
 static void	eat(t_philo *philo)
 {
 	sem_wait(philo->param->sem_forks);
+	monitor(philo, FORK);
 	sem_wait(philo->param->sem_forks);
+	monitor(philo, FORK);
 	monitor(philo, EAT);
 	micro_sleep(philo->param->time_to_eat);
 	sem_post(philo->param->sem_forks);
@@ -79,6 +81,8 @@ void	process(t_philo *philo)
 	philo->param->time_zero = get_time();
 	philo->param->last_eat = get_time();
 	pthread_create(&thread, NULL, death_loop, philo);
+	if (philo->index >= philo->param->n_philo / 2)
+		micro_sleep(philo->param->time_to_eat / 3);
 	while (true)
 	{
 		eat(philo);
