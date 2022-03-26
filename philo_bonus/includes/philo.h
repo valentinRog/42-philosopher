@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:47:12 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 17:26:15 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/26 22:05:43 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ void		lst_add_back(t_list **alst, t_list *new_node);
 
 /*clear*/
 void		unlink_param(void);
+void		close_param_sem(t_param *param);
 void		lst_clear(t_list *lst);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 09:57:52 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/26 19:51:51 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/26 22:12:13 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,8 @@ void	process(t_philo *philo)
 	sem_post(philo->param->sem_ready);
 	philo->param->time_zero = get_time();
 	philo->param->last_eat = get_time();
-	pthread_create(&thread, NULL, death_loop, philo);
+	if (pthread_create(&thread, NULL, death_loop, philo))
+		exit(EXIT_FAILURE);
 	if (philo->index >= philo->param->n_philo / 2)
 		micro_sleep(philo->param->time_to_eat / 3);
 	while (true)

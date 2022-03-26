@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 12:41:31 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/26 21:57:01 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/26 22:04:30 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,14 @@ void	unlink_param(void)
 	sem_unlink(SEM_FORKS);
 	sem_unlink(SEM_PRINT);
 	sem_unlink(SEM_LAST_EAT);
+}
+
+void	close_param_sem(t_param *param)
+{
+	sem_close(param->sem_ready);
+	sem_close(param->sem_forks);
+	sem_close(param->sem_print);
+	sem_close(param->sem_last_eat);
 }
 
 static void	lst_delone(t_list *lst)

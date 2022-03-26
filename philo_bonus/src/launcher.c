@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 16:16:55 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 17:30:05 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/26 22:07:01 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ static int	fork_safe(t_list *lst)
 	{
 		kill_all(lst);
 		lst_clear(lst);
+		close_param_sem(((t_philo *)lst->content)->param);
 		unlink_param();
 		exit(EXIT_FAILURE);
 	}
@@ -92,7 +93,10 @@ void	launch_process(t_list *lst)
 		philo = (t_philo *)node->content;
 		philo->pid = fork_safe(lst);
 		if (!philo->pid)
+		{
 			process(philo);
+			exit(EXIT_SUCCESS);
+		}
 		node = node->next;
 		i++;
 	}
