@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:48:06 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 16:35:49 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/26 21:50:42 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,16 @@ bool	init_param_sem(t_param *param)
 {
 	unlink_param();
 	param->sem_ready = sem_open(SEM_READY, O_CREAT, 0660, 1);
-	param->sem_forks = sem_open(SEM_FORKS, O_CREAT, 0660, param->n_philo);
-	param->sem_print = sem_open(SEM_PRINT, O_CREAT, 0660, 1);
-	param->sem_last_eat = sem_open(SEM_LAST_EAT, O_CREAT, 0660, 1);
-	if (param->sem_ready == SEM_FAILED || param->sem_forks == SEM_FAILED)
+	if (param->sem_ready == SEM_FAILED)
 		return (true);
-	if (param->sem_print == SEM_FAILED || param->sem_last_eat == SEM_FAILED)
+	param->sem_forks = sem_open(SEM_FORKS, O_CREAT, 0660, param->n_philo);
+	if (param->sem_forks == SEM_FAILED)
+		return (true);
+	param->sem_print = sem_open(SEM_PRINT, O_CREAT, 0660, 1);
+	if (param->sem_print == SEM_FAILED)
+		return (true);
+	param->sem_last_eat = sem_open(SEM_LAST_EAT, O_CREAT, 0660, 1);
+	if (param->sem_last_eat == SEM_FAILED)
 		return (true);
 	return (false);
 }
