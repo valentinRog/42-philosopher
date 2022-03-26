@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:48:06 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 16:35:49 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/26 22:40:31 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,29 +94,5 @@ bool	init_philo(t_param *param, t_list **alst)
 		lst_add_back(alst, new_node);
 		i++;
 	}
-	return (false);
-}
-
-bool	init_threads(t_list *lst)
-{
-	t_list		*node;
-	t_param		*param;
-	size_t		i;
-	pthread_t	*thread;
-
-	node = lst;
-	param = ((t_philo *)node->content)->param;
-	pthread_mutex_lock(&param->mutex_ready);
-	i = 0;
-	while (i < lst_size(lst))
-	{
-		thread = &((t_philo *)node->content)->thread;
-		if (pthread_create(thread, NULL, philoop, node))
-			return (true);
-		node = node->next;
-		i++;
-	}
-	param->time_zero = get_time();
-	pthread_mutex_unlock(&param->mutex_ready);
 	return (false);
 }

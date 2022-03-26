@@ -1,41 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   monitor.c                                          :+:      :+:    :+:   */
+/*   launcher.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/21 20:16:29 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/23 11:46:01 by vrogiste         ###   ########.fr       */
+/*   Created: 2022/03/26 22:34:24 by vrogiste          #+#    #+#             */
+/*   Updated: 2022/03/26 22:40:46 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	monitor(t_philo *philo, int action)
-{
-	pthread_mutex_lock(&philo->param->mutex_print);
-	if (check_death(philo))
-	{
-		pthread_mutex_unlock(&philo->param->mutex_print);
-		return ;
-	}
-	printf("%" PRIu64, get_time() - philo->param->time_zero);
-	printf(" %d", philo->index + 1);
-	if (action == FORK)
-		printf(" has taken a fork\n");
-	else if (action == EAT)
-		printf(" is eating\n");
-	else if (action == SLEEP)
-		printf(" is sleeping\n");
-	else if (action == THINK)
-		printf(" is thinking\n");
-	else if (action == FORK)
-		printf(" has taken a fork\n");
-	pthread_mutex_unlock(&philo->param->mutex_print);
-}
-
-bool	eat_enough(t_list *lst)
+static bool	eat_enough(t_list *lst)
 {
 	size_t	i;
 	t_philo	*philo;
@@ -57,7 +34,7 @@ bool	eat_enough(t_list *lst)
 	return (true);
 }
 
-void	set_death(t_param *param)
+static void	set_death(t_param *param)
 {
 	pthread_mutex_lock(&param->mutex_death);
 	param->death = true;
@@ -90,6 +67,30 @@ void	death_loop(t_list *lst)
 		pthread_mutex_unlock(&philo->mutex_last_eat);
 		node = node->next;
 	}
+}
+
+bool	init_threads(t_list *lst)
+{
+	t_list		*node;
+	t_param		*param;
+	size_t		i;
+	pthread_t	*thread;
+
+	node = lst;
+	param = ((t_philo *)node->content)->param;
+	pthread_mutex_lock(&param->mutex_ready);
+	i = 0;
+	while (i < lst_size(lst))
+	{
+		thread = &((t_philo *)node->content)->thread;
+		if (pthread_create(thread, NULL, philoop, node))
+			return (true);
+		node = node->next;
+		i++;
+	}
+	param->time_zero = get_time();
+	pthread_mutex_unlock(&param->mutex_ready);
+	return (false);
 }
 
 void	join_philos(t_list *lst)

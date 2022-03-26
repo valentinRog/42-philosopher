@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:47:12 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/25 16:35:49 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/26 22:39:20 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,20 +77,17 @@ void		micro_sleep(uint64_t time);
 /*init*/
 bool		fill_param(t_param *param, int argc, char **argv);
 bool		init_philo(t_param *param, t_list **alst);
-bool		init_threads(t_list *lst);
 
 /*threads*/
-bool		check_death(t_philo *philo);
 void		*philoop(void *arg);
 
 /*clear*/
 void		lst_clear(t_list *lst);
 void		destroy_param_mutex(t_param *param);
 
-/*monitor*/
-void		monitor(t_philo *philo, int action);
-bool		eat_enough(t_list *lst);
+/*launcher*/
 void		death_loop(t_list *lst);
+bool		init_threads(t_list *lst);
 void		join_philos(t_list *lst);
 
 #endif

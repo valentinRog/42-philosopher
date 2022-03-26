@@ -6,11 +6,44 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:50:22 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/23 12:31:50 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/26 22:39:43 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+static bool	check_death(t_philo *philo)
+{
+	bool	death;
+
+	pthread_mutex_lock(&philo->param->mutex_death);
+	death = philo->param->death;
+	pthread_mutex_unlock(&philo->param->mutex_death);
+	return (death);
+}
+
+static void	monitor(t_philo *philo, int action)
+{
+	pthread_mutex_lock(&philo->param->mutex_print);
+	if (check_death(philo))
+	{
+		pthread_mutex_unlock(&philo->param->mutex_print);
+		return ;
+	}
+	printf("%" PRIu64, get_time() - philo->param->time_zero);
+	printf(" %d", philo->index + 1);
+	if (action == FORK)
+		printf(" has taken a fork\n");
+	else if (action == EAT)
+		printf(" is eating\n");
+	else if (action == SLEEP)
+		printf(" is sleeping\n");
+	else if (action == THINK)
+		printf(" is thinking\n");
+	else if (action == FORK)
+		printf(" has taken a fork\n");
+	pthread_mutex_unlock(&philo->param->mutex_print);
+}
 
 static void	eat(t_philo *philo, t_philo *next_philo)
 {
@@ -38,16 +71,6 @@ static void	eat(t_philo *philo, t_philo *next_philo)
 	pthread_mutex_lock(&philo->mutex_n_eaten);
 	philo->n_eaten++;
 	pthread_mutex_unlock(&philo->mutex_n_eaten);
-}
-
-bool	check_death(t_philo *philo)
-{
-	bool	death;
-
-	pthread_mutex_lock(&philo->param->mutex_death);
-	death = philo->param->death;
-	pthread_mutex_unlock(&philo->param->mutex_death);
-	return (death);
 }
 
 void	*philoop(void *arg)
