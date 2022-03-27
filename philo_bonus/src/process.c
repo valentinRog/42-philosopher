@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 09:57:52 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/26 22:25:53 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/27 09:46:54 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	*death_loop(void *args)
 			sem_wait(param->sem_print);
 			printf("%" PRId64, get_time() - param->time_zero);
 			printf(" %d died\n", philo->index);
-			clear_all(lst);
+			lst_clear(lst);
 			exit(EXIT_SUCCESS);
 		}
 		sem_post(param->sem_last_eat);
@@ -87,7 +87,7 @@ void	process(t_list	*lst)
 	philo->param->last_eat = get_time();
 	if (pthread_create(&thread, NULL, death_loop, lst))
 	{
-		clear_all(lst);
+		lst_clear(lst);
 		exit(EXIT_FAILURE);
 	}
 	if (philo->index >= philo->param->n_philo / 2)

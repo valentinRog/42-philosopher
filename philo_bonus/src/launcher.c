@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 16:16:55 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/26 22:53:09 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/27 09:48:56 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static int	fork_safe(t_list *lst)
 	if (pid < 0)
 	{
 		kill_all(lst);
-		clear_all(lst);
+		lst_clear(lst);
 		exit(EXIT_FAILURE);
 	}
 	return (pid);
@@ -65,12 +65,12 @@ static int	fork_safe(t_list *lst)
 
 static void	watch_process(t_list *lst)
 {
-	micro_sleep(((t_philo *)lst->content)->param->time_to_eat);
 	if (!fork_safe(lst))
 	{
 		watch_n_eaten(lst);
 		exit(EXIT_SUCCESS);
 	}
+	sem_post(((t_philo *)lst->content)->param->sem_ready);
 	wait(NULL);
 	kill_all(lst);
 }
@@ -98,6 +98,5 @@ void	launch_process(t_list *lst)
 		node = node->next;
 		i++;
 	}
-	sem_post(param->sem_ready);
 	watch_process(lst);
 }
