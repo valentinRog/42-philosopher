@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:48:06 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/26 22:40:31 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/27 07:47:09 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ bool	fill_param(t_param *param, int argc, char **argv)
 	if (argc < 5 || argc > 6)
 		return (true);
 	param->number_of_eating = 10000000;
-	if (atoi_error(argv[1], &param->n_philo))
+	if (atoi_error(argv[1], &param->n_philo) || !param->n_philo)
 		return (true);
 	if (atoi_error(argv[2], &param->time_to_die))
 		return (true);
