@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 09:57:52 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/27 13:03:19 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/27 13:09:29 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,11 @@ void	*death_loop(void *args)
 		{
 			sem_wait(param->sem_print);
 			printf("%" PRId64, get_time() - param->time_zero);
-			printf(" %d died\n", philo->index);
+			printf(" %d died\n", philo->index + 1);
 			lst_clear(lst);
 			exit(EXIT_SUCCESS);
 		}
+		usleep(50);
 	}
 	return (NULL);
 }
