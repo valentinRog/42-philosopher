@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 13:48:06 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/27 07:48:42 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/03/27 13:04:44 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,6 @@ bool	init_param_sem(t_param *param)
 		return (true);
 	param->sem_print = sem_open(SEM_PRINT, O_CREAT, 0660, 1);
 	if (param->sem_print == SEM_FAILED)
-		return (true);
-	param->sem_last_eat = sem_open(SEM_LAST_EAT, O_CREAT, 0660, 1);
-	if (param->sem_last_eat == SEM_FAILED)
 		return (true);
 	return (false);
 }
