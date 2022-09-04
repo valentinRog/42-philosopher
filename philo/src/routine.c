@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/04 17:18:53 by root              #+#    #+#             */
-/*   Updated: 2022/09/04 20:42:49 by root             ###   ########.fr       */
+/*   Updated: 2022/09/04 20:51:10 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ static bool	pick_forks(t_philo *p, t_game *g)
 {
 	if (g->n % 2 && p->i == g->n - 1)
 		while (g->turn != 2 && g->running)
-			;
+			usleep(50);
 	else
 		while (g->turn != p->i % 2 && g->running)
-			;
+			usleep(50);
 	if (!g->running)
 		return (true);
 	if (p->i < (p->i + 1) % g->n)
