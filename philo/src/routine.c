@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/04 17:18:53 by root              #+#    #+#             */
-/*   Updated: 2022/09/04 18:09:57 by root             ###   ########.fr       */
+/*   Updated: 2022/09/04 18:48:15 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,19 @@ static void	pick_forks(t_philo *p, t_game *g)
 	if (g->n % 2 && p->i == g->n - 1)
 	{
 		while (g->turn != 2)
-			;
+			if (!g->running)
+				return ;
 	}
 	else
 	{
 		while (g->turn != p->i % 2)
-			;
+			if (!g->running)
+				return ;
 	}
 	pthread_mutex_lock(g->forks + p->i);
+	monitor(p, g, FORK);
 	pthread_mutex_lock(g->forks + (p->i + 1) % g->n);
+	monitor(p, g, FORK);
 	g->ready_to_eat++;
 	if (g->ready_to_eat == g->n / 2 || g->turn == 2)
 	{
@@ -71,7 +75,8 @@ void	*philoop(void *arg)
 	{
 		eat(p, g);
 		monitor(p, g, SLEEP);
-		milli_sleep(g->time_to_sleep);
+		if (g->running)
+			milli_sleep(g->time_to_sleep);
 		monitor(p, g, THINK);
 	}
 	return (NULL);
