@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/04 17:18:53 by root              #+#    #+#             */
-/*   Updated: 2022/09/04 20:51:10 by root             ###   ########.fr       */
+/*   Updated: 2022/09/04 20:56:51 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ static void	monitor(t_philo *p, t_game *g, char *action)
 	pthread_mutex_unlock(&g->print_lock);
 }
 
-static bool	pick_forks(t_philo *p, t_game *g)
+static bool	pick_forks(atomic_int *turn, t_philo *p, t_game *g)
 {
 	if (g->n % 2 && p->i == g->n - 1)
-		while (g->turn != 2 && g->running)
+		while (*turn != 2 && g->running)
 			usleep(50);
 	else
-		while (g->turn != p->i % 2 && g->running)
+		while (*turn != p->i % 2 && g->running)
 			usleep(50);
 	if (!g->running)
 		return (true);
@@ -49,16 +49,19 @@ static bool	pick_forks(t_philo *p, t_game *g)
 
 static void	eat(t_philo *p, t_game *g)
 {
-	if (!pick_forks(p, g))
+	static atomic_int	ready_to_eat;
+	static atomic_int	turn;
+
+	if (!pick_forks(&turn, p, g))
 	{
-		g->ready_to_eat++;
-		if (g->ready_to_eat == g->n / 2 || g->turn == 2)
+		ready_to_eat++;
+		if (ready_to_eat == g->n / 2 || turn == 2)
 		{
-			g->ready_to_eat = 0;
-			g->turn++;
-			g->turn %= 3;
-			if (g->turn == 2 && !(g->n % 2))
-				g->turn = 0;
+			ready_to_eat = 0;
+			turn++;
+			turn %= 3;
+			if (turn == 2 && !(g->n % 2))
+				turn = 0;
 		}
 		monitor(p, g, EAT);
 		milli_sleep(g->time_to_eat);

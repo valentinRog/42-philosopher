@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:47:12 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/09/04 18:40:27 by root             ###   ########.fr       */
+/*   Updated: 2022/09/04 20:55:25 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,6 @@ typedef struct s_game
 	int				n_eat;
 	int				t0;
 	atomic_int		ate_enough;
-	atomic_int		turn;
-	atomic_int		ready_to_eat;
 	atomic_bool		running;
 	t_philo			philos[PHILO_MAX];
 	pthread_mutex_t	forks[PHILO_MAX];
