@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:47:12 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/03/26 22:51:58 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/09/04 18:40:27 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,75 +19,54 @@
 # include <stdbool.h>
 # include <pthread.h>
 # include <sys/time.h>
-# include <limits.h>
-# include <inttypes.h>
+# include <stdatomic.h>
+# include <string.h>
 
-enum
-{
-	FORK,
-	EAT,
-	SLEEP,
-	THINK,
-	DIE,
-};
+# define PHILO_MAX 1000
+# define ARG_MAX 2
 
-typedef struct s_list
-{
-	void			*content;
-	struct s_list	*prev;
-	struct s_list	*next;
-}	t_list;
+# define FORK "has taken a fork"
+# define EAT "is eating"
+# define SLEEP "is sleeping"
+# define THINK "is thinking"
 
-typedef struct s_param
+typedef struct s_arg
 {
-	int				n_philo;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
-	int				number_of_eating;
-	uint64_t		time_zero;
-	bool			death;
-	pthread_mutex_t	mutex_ready;
-	pthread_mutex_t	mutex_death;
-	pthread_mutex_t	mutex_print;
-}					t_param;
+	void	*content[ARG_MAX];
+}	t_arg;
 
 typedef struct s_philo
 {
-	int				index;
-	t_param			*param;
-	pthread_t		thread;
-	uint64_t		last_eat;
-	int				n_eaten;
-	pthread_mutex_t	mutex_last_eat;
-	pthread_mutex_t	mutex_fork;
-	pthread_mutex_t	mutex_n_eaten;
+	int			i;
+	atomic_int	last_eat;
+	int			n_eaten;
 }	t_philo;
 
-/*circular_lst*/
-t_list		*lst_new(void *content);
-size_t		lst_size(t_list *lst);
-void		lst_add_back(t_list **alst, t_list *new_node);
+typedef struct s_game
+{
+	int				n;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				n_eat;
+	int				t0;
+	atomic_int		ate_enough;
+	atomic_int		turn;
+	atomic_int		ready_to_eat;
+	atomic_bool		running;
+	t_philo			philos[PHILO_MAX];
+	pthread_mutex_t	forks[PHILO_MAX];
+	pthread_t		threads[PHILO_MAX];
+	pthread_mutex_t	print_lock;
+	pthread_mutex_t	start_lock;
+}	t_game;
 
-/*utils*/
-bool		atoi_error(char *str, int *nb);
-uint64_t	get_time(void);
-void		micro_sleep(uint64_t time);
+/* routine */
+void	*philoop(void *arg);
 
-/*init*/
-bool		fill_param(t_param *param, int argc, char **argv);
-bool		init_philo(t_param *param, t_list **alst);
-
-/*threads*/
-void		*philoop(void *arg);
-
-/*clear*/
-void		lst_clear(t_list *lst);
-void		destroy_param_mutex(t_param *param);
-
-/*launcher*/
-void		death_loop(t_list *lst);
-bool		launch_threads(t_list *lst);
-void		join_philos(t_list *lst);
+/* utils */
+int		ft_atoi(const char *str);
+int		get_time(void);
+void	milli_sleep(int time);
 
 #endif
